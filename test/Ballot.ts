@@ -29,7 +29,12 @@ describe("Ballot", () => {
             const chairperson = await ballotContract.chairperson();
             expect(chairperson).to.equal(deployerAddress);
         });
-        it("has zero votes for all proposals", async function () { });
+        it("has zero votes for all proposals", async function () {
+            for (let i = 0; i < PROPOSALS.length; i++) {
+                const proposal = await ballotContract.proposals(i);
+                expect(proposal.voteCount).to.equal(0);
+            }
+        });
         it("sets the voting weight for the chairperson to 1", async function () { });
     })
 })
