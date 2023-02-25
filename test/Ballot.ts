@@ -10,8 +10,9 @@ describe("Ballot", () => {
     }
     beforeEach(async () => {
         const ballotContractFactory = await ethers.getContractFactory("Ballot");
-        ballotContract = await ballotContractFactory.deploy(convertToBytes32(PROPOSALS));
-        console.log("It works!!");
+        const convertedProposals = convertToBytes32(PROPOSALS);
+        ballotContract = await ballotContractFactory.deploy(convertedProposals);
+        console.log(convertedProposals);
     });
     describe("when the contract is deployed", () => {
         it("has the the provided proposals", async function () { });
