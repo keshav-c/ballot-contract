@@ -16,7 +16,13 @@ describe("Ballot", () => {
         const transactionReceipt = await ballotContract.deployTransaction.wait();
     });
     describe("when the contract is deployed", () => {
-        it("has the the provided proposals", async function () { });
+        it("has the the provided proposals", async function () {
+            for (let i = 0; i < PROPOSALS.length; i++) {
+                const proposal = await ballotContract.proposals(i);
+                const name = ethers.utils.parseBytes32String(proposal.name);
+                expect(name).to.equal(PROPOSALS[i]);
+            }
+        });
         it("sets the deployer address as the chairperson", async function () {
             const signers = await ethers.getSigners();
             const deployerAddress = await signers[0].getAddress();

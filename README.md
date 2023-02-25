@@ -11,3 +11,8 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+## Notes
+
+**The proposals array public contract member:**
+- It is impossible to get the entire array from the contract storage at once
+- We can only search elements one by one
