@@ -35,7 +35,10 @@ describe("Ballot", () => {
                 expect(proposal.voteCount).to.equal(0);
             }
         });
-        it("sets the voting weight for the chairperson to 1", async function () { });
+        it("sets the voting weight for the chairperson to 1", async function () {
+            const proposal23 = await ballotContract.proposals(23);
+            console.log(proposal23);
+        });
     })
 })
 

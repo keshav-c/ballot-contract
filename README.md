@@ -16,3 +16,4 @@ npx hardhat run scripts/deploy.ts
 **The proposals array public contract member:**
 - It is impossible to get the entire array from the contract storage at once
 - We can only search elements one by one
+- If we go out of bounds when accessing members on the deployed contract, we get an error
