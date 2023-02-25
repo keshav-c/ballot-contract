@@ -2,19 +2,22 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { Ballot } from "../typechain-types";
 
+const PROPOSALS = ["proposal A", "proposal B", "proposal C"];
+
+function convertToBytes32(proposal: string[]): string[] {
+    return proposal.map((p) => ethers.utils.formatBytes32String(p));
+}
 
 describe("Ballot", () => {
     let ballotContract: Ballot;
-    const PROPOSALS = ["proposal A", "proposal B", "proposal C"];
-    function convertToBytes32(proposal: string[]): string[] {
-        return proposal.map((p) => ethers.utils.formatBytes32String(p));
-    }
+
     beforeEach(async () => {
         const ballotContractFactory = await ethers.getContractFactory("Ballot");
         const convertedProposals = convertToBytes32(PROPOSALS);
         ballotContract = await ballotContractFactory.deploy(convertedProposals);
         const transactionReceipt = await ballotContract.deployTransaction.wait();
     });
+
     describe("when the contract is deployed", () => {
         it("has the the provided proposals", async function () {
             for (let i = 0; i < PROPOSALS.length; i++) {
