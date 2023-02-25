@@ -36,8 +36,10 @@ describe("Ballot", () => {
             }
         });
         it("sets the voting weight for the chairperson to 1", async function () {
-            const proposal23 = await ballotContract.proposals(23);
-            console.log(proposal23);
+            const signers = await ethers.getSigners();
+            const deployerAddress = await signers[0].getAddress();
+            const chairperson = await ballotContract.voters(deployerAddress);
+            expect(chairperson.weight).to.equal(1);
         });
     })
 })
