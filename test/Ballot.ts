@@ -112,7 +112,7 @@ describe("Ballot", () => {
             const signers = await ethers.getSigners();
             const voter = signers[1];
             const delegate = signers[2];
-            let rightToVoteTxn = await ballotContract.giveRightToVote(voter.address);
+            let rightToVoteTxn = await ballotContract.giveRightToVote(voter.address); //not clear why giveRightToVote is used here. Only Chair person can call this function
             await rightToVoteTxn.wait();
             rightToVoteTxn = await ballotContract.giveRightToVote(delegate.address);
             await rightToVoteTxn.wait();
