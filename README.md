@@ -28,3 +28,6 @@ npx hardhat run scripts/deploy.ts
     ```shell
     yarn run ts-node --files path-to-script.ts ...arguments
     ```
+
+**On running**
+- Run `yarn install` when you change folder name and update package.json
