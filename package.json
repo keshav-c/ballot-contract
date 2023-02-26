@@ -25,7 +25,9 @@
     "typescript": ">=4.5.0"
   },
   "scripts": {
-    "deploy": "run ts-node ./scripts/deploy.ts"
+    "deploy": "run ts-node ./scripts/deploy.ts",
+    "query": "run ts-node ./scripts/query.ts",
+    "query-cpontrelli": "run ts-node ./scripts/query.ts 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC"
   },
   "dependencies": {
     "dotenv": "^16.0.3"
