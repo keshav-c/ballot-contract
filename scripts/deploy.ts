@@ -31,6 +31,9 @@ async function main() {
     const signer = signers[0];
     const balance = await signer.getBalance();
     console.log(`The account ${signer.address} has a balance of ${balance}`);
+
+    const provider = ethers.provider;
+    console.log(provider);
 }
 
 main().catch((error) => {
