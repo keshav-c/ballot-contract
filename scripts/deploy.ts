@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers } from "ethers";
 
 const PROPOSALS = ["Proposal A", "Proposal B", "Proposal C"];
 
@@ -15,32 +15,12 @@ async function main() {
     proposals.forEach((element, index) => {
         console.log(`Proposal N. ${index + 1}: ${element}`);
     });
-    console.log("Deploying Ballot contract ...");
-    const ballotContractFactory = await ethers.getContractFactory("Ballot");
-    // check the constructor of the contract
-    const convertedProposals = convertToBytes32(proposals);
-    // this sends the transaction to the blockchain
-    const ballotContract = await ballotContractFactory.deploy(convertedProposals);
-    // this waits for the transaction to be mined
-    const transactionReceipt = await ballotContract.deployTransaction.wait();
-    const contractAddress = transactionReceipt.contractAddress;
-    const blockNumber = transactionReceipt.blockNumber;
-    console.log(`Ballot contract deployed at ${contractAddress} and block number ${blockNumber}`);
 
-    const signers = await ethers.getSigners();
-    const signer = signers[0];
+    const provider = ethers.getDefaultProvider("goerli");
+    const wallet = ethers.Wallet.createRandom();
+    const signer = wallet.connect(provider);
     const balance = await signer.getBalance();
     console.log(`The account ${signer.address} has a balance of ${balance}`);
-
-    // console.log("---------------------");
-    // const provider = ethers.getDefaultProvider("goerli");
-    // console.log({ provider });
-    // const lastBlock = await provider.getBlock("latest");
-    // console.log("The last block mined is");
-    // console.log({ lastBlock });
-
-    console.log("Provider for the default signer?...")
-    console.log({ provider: signer.provider })
 }
 
 main().catch((error) => {
