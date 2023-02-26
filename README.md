@@ -5,7 +5,7 @@ This project demonstrates hardhat usage to interact with smart contracts.
 Try running some of the following tasks:
 
 ```shell
-yarn deploy # You can note down the deployed contract address in the .env under MY_BALLOT_CONTRACT
+yarn deploy # You can note down the deployed contract address. Use it to update the other scripts in package.json
 yarn query # query the signer and the deployed ballot contract
 yarn query-cpontrelli # query the ballot contract with the same source deployed by cpontrelli
 ```

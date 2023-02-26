@@ -23,11 +23,7 @@ async function main() {
 
     let contractAddress = process.argv[2];
     if (!contractAddress || contractAddress.length <= 0) {
-        const contractAddress = process.env.MY_CONTRACT_ADDRESS;
-        if (!contractAddress || contractAddress.length <= 0) {
-            throw new Error("You haven't yet deployed a contract. Please run 'yarn deploy' first.");
-        }
-        console.log(`Using contract address ${contractAddress} from .env file`);
+        throw new Error("Provide a contract address. Please run 'yarn deploy' first.");
     }
     const address = ethers.utils.getAddress(contractAddress);
     const ballotContract = new Ballot__factory(signer).attach(address);
