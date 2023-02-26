@@ -103,4 +103,23 @@ describe("Ballot", () => {
         });
     });
 
+    describe("when the voter interact with the delegate function in the contract", function () {
+        it("should transfer voting power", async () => {
+            const signers = await ethers.getSigners();
+            const voter = signers[1];
+            const delegate = signers[2];
+            let rightToVoteTxn = await ballotContract.giveRightToVote(voter.address);
+            await rightToVoteTxn.wait();
+            rightToVoteTxn = await ballotContract.giveRightToVote(delegate.address);
+            await rightToVoteTxn.wait();
+            const delegateTxn = await ballotContract.connect(voter).delegate(delegate.address);
+            await delegateTxn.wait();
+            const delegateVoter = await ballotContract.voters(delegate.address);
+            expect(delegateVoter.weight).to.equal(2);
+            const onChainVoter = await ballotContract.voters(voter.address);
+            expect(onChainVoter.voted).to.be.true;
+            expect(onChainVoter.delegate).to.equal(delegate.address);
+        });
+    });
+
 });
