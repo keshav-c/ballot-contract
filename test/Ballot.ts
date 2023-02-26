@@ -90,4 +90,17 @@ describe("Ballot", () => {
         })
     });
 
+    describe("when the voter interact with the vote function in the contract", function () {
+        it("should register the vote", async () => {
+            const signers = await ethers.getSigners();
+            const voter = signers[1];
+            const rightToVoteTxn = await ballotContract.giveRightToVote(voter.address);
+            await rightToVoteTxn.wait();
+            const voteTxn = await ballotContract.connect(voter).vote(1);
+            await voteTxn.wait();
+            const proposal = await ballotContract.proposals(1);
+            expect(proposal.voteCount).to.equal(1);
+        });
+    });
+
 });
