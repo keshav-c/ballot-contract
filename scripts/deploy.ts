@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const PROPOSALS = ["Proposal A", "Proposal B", "Proposal C"];
 
@@ -17,10 +19,14 @@ async function main() {
     });
 
     const provider = ethers.getDefaultProvider("goerli");
+
+    const privateKey = process.env.PRIVATE_KEY;
+    console.log("privateKey", privateKey);
+
     const wallet = ethers.Wallet.createRandom();
     const signer = wallet.connect(provider);
-    const balance = await signer.getBalance();
-    console.log(`The account ${signer.address} has a balance of ${balance}`);
+    // const balance = await signer.getBalance();
+    // console.log(`The account ${signer.address} has a balance of ${balance}`);
 }
 
 main().catch((error) => {

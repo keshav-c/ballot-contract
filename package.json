@@ -26,5 +26,8 @@
   },
   "scripts": {
     "deploy": "run ts-node ./scripts/deploy.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
 }
