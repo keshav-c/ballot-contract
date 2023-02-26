@@ -19,26 +19,42 @@ async function main() {
     const signer = wallet.connect(provider);
     const balance = await signer.getBalance();
     console.log(`The account ${signer.address} has a balance of ${balance} wei`);
+    console.log("------------------");
 
     let contractAddress = process.argv[2];
     if (!contractAddress || contractAddress.length <= 0) {
-        contractAddress = "0x284fd3B532b8Ab045047C87b20daefA4ab1B1721";
+        const contractAddress = process.env.MY_CONTRACT_ADDRESS;
+        if (!contractAddress || contractAddress.length <= 0) {
+            throw new Error("You haven't yet deployed a contract. Please run 'yarn deploy' first.");
+        }
+        console.log(`Using contract address ${contractAddress} from .env file`);
     }
     const address = ethers.utils.getAddress(contractAddress);
     const ballotContract = new Ballot__factory(signer).attach(address);
 
     const onChainVoter = await ballotContract.voters(signer.address);
-    console.log({ onChainVoter });
+    console.log(`Voter : ${signer.address}`);
+    console.log(`Voted?: ${onChainVoter.voted}`);
+    console.log(`Weight: ${onChainVoter.weight}`);
+    console.log(`Vote  : ${onChainVoter.vote}`);
+    console.log(`Delegated to: ${onChainVoter.delegate}`);
+    console.log("------------------");
 
+    console.log("Proposals: ");
     for (let i = 0; i < 10; i++) {
         const proposal = await ballotContract.proposals(i);
-        console.log(`Proposal ${i}-----------------`);
-        console.log({ proposal });
+        console.log("------------------");
+        console.log(`Proposal ${i}`);
+        const name = ethers.utils.parseBytes32String(proposal.name);
+        console.log(`Name : ${name}`);
+        console.log(`Count: ${proposal.voteCount}`);
     }
+    console.log("------------------");
     console.log("... There were more that 10 proposals!")
 }
 
 main().catch((error) => {
-    console.log(`------That was all the proposals.`);
+    console.log("------------------");
+    console.log(`...That was all the proposals.`);
     process.exitCode = 1;
 });
