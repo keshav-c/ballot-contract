@@ -6,8 +6,10 @@ Try running some of the following tasks:
 
 ```shell
 yarn deploy # You can note down the deployed contract address. Use it to update the other scripts in package.json
-yarn query # query the signer and the deployed ballot contract
-yarn query-cpontrelli # query the ballot contract with the same source deployed by cpontrelli
+yarn query # query the signer and the deployed ballot contract. Contract used: 0x81c8E0E455Ea84f02F9A890A294425F3A9F09b41
+yarn query-cpontrelli # query the ballot contract.  Contract used: 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC
+yarn delegate # needs delegate addr. delegates the signer to the delegate addr. Contract used: 0x81c8E0E455Ea84f02F9A890A294425F3A9F09b41
+yarn delegate-cpontrelli # needs delegate addr. delegates the signer to the delegate addr. Contract used: 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC
 ```
 ## Notes
 
@@ -44,3 +46,6 @@ yarn query-cpontrelli # query the ballot contract with the same source deployed 
  
 - Ballot contract deployed at 0x284fd3B532b8Ab045047C87b20daefA4ab1B1721 and block number 8558261
 - Once deployed we don't need to deploy the same contract again. Instead we use the `contractFactory.attach(address)` function to interact with the deployed contract.
+
+### Info
+- The contract at 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC is owned by 0x00CeCbD23Dc1bc47359f2d26d255bE29b51e2E19

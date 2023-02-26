@@ -27,7 +27,9 @@
   "scripts": {
     "deploy": "run ts-node ./scripts/deploy.ts",
     "query": "run ts-node ./scripts/query.ts 0x81c8E0E455Ea84f02F9A890A294425F3A9F09b41",
-    "query-cpontrelli": "run ts-node ./scripts/query.ts 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC"
+    "delegate": "run ts-node ./scripts/delegate.ts 0x81c8E0E455Ea84f02F9A890A294425F3A9F09b41",
+    "query-cpontrelli": "run ts-node ./scripts/query.ts 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC",
+    "delegate-cpontrelli": "run ts-node ./scripts/delegate.ts 0xDAd4B5E3f5Fa7e346B45594F96A25d7A2b1604dC"
   },
   "dependencies": {
     "dotenv": "^16.0.3"
