@@ -18,14 +18,17 @@ async function main() {
         console.log(`Proposal N. ${index + 1}: ${element}`);
     });
 
-    const provider = ethers.getDefaultProvider("goerli");
-
     const privateKey = process.env.PRIVATE_KEY;
     if (!privateKey || privateKey.length <= 0) {
         throw new Error("No private key found");
     }
-    console.log("privateKey", privateKey);
 
+    const alchemyApiKey = process.env.ALCHEMY_API_KEY;
+    if (!alchemyApiKey || alchemyApiKey.length <= 0) {
+        throw new Error("No Alchemy API key found");
+    }
+
+    const provider = new ethers.providers.AlchemyProvider("goerli", alchemyApiKey);
     const wallet = new ethers.Wallet(privateKey, provider);
     const signer = wallet.connect(provider);
     const balance = await signer.getBalance();
