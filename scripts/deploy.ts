@@ -26,6 +26,11 @@ async function main() {
     const contractAddress = transactionReceipt.contractAddress;
     const blockNumber = transactionReceipt.blockNumber;
     console.log(`Ballot contract deployed at ${contractAddress} and block number ${blockNumber}`);
+
+    const signers = await ethers.getSigners();
+    const signer = signers[0];
+    const balance = await signer.getBalance();
+    console.log(`The account ${signer.address} has a balance of ${balance}`);
 }
 
 main().catch((error) => {
