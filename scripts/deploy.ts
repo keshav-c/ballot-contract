@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import * as dotenv from "dotenv";
+import { Ballot__factory } from "../typechain-types";
 dotenv.config();
 
 const PROPOSALS = ["Proposal A", "Proposal B", "Proposal C"];
@@ -33,6 +34,20 @@ async function main() {
     const signer = wallet.connect(provider);
     const balance = await signer.getBalance();
     console.log(`The account ${signer.address} has a balance of ${balance} wei`);
+
+    // Ballot__factory is picked directly, rather than returned from search
+    const ballotContractFactory = new Ballot__factory(signer);
+    // check the constructor of the contract
+    const convertedProposals = convertToBytes32(proposals);
+    console.log("Deploying Ballot contract ...");
+    // this sends the transaction to the blockchain
+    const ballotContract = await ballotContractFactory.deploy(convertedProposals);
+    console.log("Awaiting transaction to be mined ...");
+    // this waits for the transaction to be mined
+    const transactionReceipt = await ballotContract.deployTransaction.wait();
+    const contractAddress = transactionReceipt.contractAddress;
+    const blockNumber = transactionReceipt.blockNumber;
+    console.log(`Ballot contract deployed at ${contractAddress} and block number ${blockNumber}`);
 }
 
 main().catch((error) => {

@@ -36,3 +36,12 @@ npx hardhat run scripts/deploy.ts
 
 **Printing Stuff**
 - Enclose objects in `{}` to avoid `[object Object]` console logs
+
+**Using the real test network**
+- In order to break out of localhost, we use the `ethers` from _ethers.js_ library (v5)
+- `ethers.getContractFactory` is no longer available, instead use the Contract Factory in typechain
+- Alchemy UI shows the details of all the recent requests on the chain.
+
+## Deployments
+ 
+- Ballot contract deployed at 0x284fd3B532b8Ab045047C87b20daefA4ab1B1721 and block number 8558261
