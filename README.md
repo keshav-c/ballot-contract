@@ -1,15 +1,13 @@
-# Sample Hardhat Project
+# Ballot Contract Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This project demonstrates hardhat usage to interact with smart contracts.
 
 Try running some of the following tasks:
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+yarn deploy # You can note down the deployed contract address in the .env under MY_BALLOT_CONTRACT
+yarn query # query the signer and the deployed ballot contract
+yarn query-cpontrelli # query the ballot contract with the same source deployed by cpontrelli
 ```
 ## Notes
 
