@@ -26,18 +26,21 @@ describe("Ballot", () => {
                 expect(name).to.equal(PROPOSALS[i]);
             }
         });
+
         it("sets the deployer address as the chairperson", async function () {
             const signers = await ethers.getSigners();
             const deployerAddress = await signers[0].getAddress();
             const chairperson = await ballotContract.chairperson();
             expect(chairperson).to.equal(deployerAddress);
         });
+
         it("has zero votes for all proposals", async function () {
             for (let i = 0; i < PROPOSALS.length; i++) {
                 const proposal = await ballotContract.proposals(i);
                 expect(proposal.voteCount).to.equal(0);
             }
         });
+
         it("sets the voting weight for the chairperson to 1", async function () {
             const signers = await ethers.getSigners();
             const deployerAddress = await signers[0].getAddress();
@@ -52,15 +55,38 @@ describe("Ballot", () => {
             const chairpersonSigner = signers[0];
             const voter = signers[1];
             const voterAddress = voter.getAddress();
-            await ballotContract.connect(chairpersonSigner).giveRightToVote(voterAddress);
+            const transaction = await ballotContract.connect(chairpersonSigner).giveRightToVote(voterAddress);
+            await transaction.wait();
             const onChainVoter = await ballotContract.voters(voterAddress);
             expect(onChainVoter.weight).to.equal(1);
         });
+
         it("can not give right to vote for someone that has voted", async function () {
-            // TODO
+            const signers = await ethers.getSigners();
+            const chairpersonSigner = signers[0];
+            const voter = signers[1];
+            const voterAddress = voter.getAddress();
+            const rightToVoteTxn = await ballotContract.connect(chairpersonSigner).giveRightToVote(voterAddress);
+            await rightToVoteTxn.wait();
+            const voteTxn = await ballotContract.connect(voter).vote(0);
+            await voteTxn.wait();
+            await expect(ballotContract
+                .connect(chairpersonSigner)
+                .giveRightToVote(voterAddress))
+                .to.be.revertedWith("The voter already voted.");
         });
+
         it("can not give right to vote for someone that has already voting rights", async function () {
-            // TODO
+            const signers = await ethers.getSigners();
+            const chairpersonSigner = signers[0];
+            const voter = signers[1];
+            const voterAddress = voter.getAddress();
+            const rightToVoteTxn = await ballotContract.connect(chairpersonSigner).giveRightToVote(voterAddress);
+            await rightToVoteTxn.wait();
+            await expect(ballotContract
+                .connect(chairpersonSigner)
+                .giveRightToVote(voterAddress))
+                .to.be.reverted;
         })
     });
 
