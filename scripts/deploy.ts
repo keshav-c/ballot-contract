@@ -32,8 +32,12 @@ async function main() {
     const balance = await signer.getBalance();
     console.log(`The account ${signer.address} has a balance of ${balance}`);
 
-    const provider = ethers.provider;
-    console.log(provider);
+    console.log("---------------------");
+    const provider = ethers.getDefaultProvider("goerli");
+    console.log({ provider });
+    const lastBlock = await provider.getBlock("latest");
+    console.log("The last block mined is");
+    console.log({ lastBlock });
 }
 
 main().catch((error) => {

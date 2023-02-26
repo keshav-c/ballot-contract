@@ -33,3 +33,6 @@ npx hardhat run scripts/deploy.ts
 - Run `yarn install` when you change folder name and update package.json
 - Changes to the local blockchain are persistent? The first signer which deployed the ballot contract has a slightly reduced balance...
     - No! it would be reduced if we check balance after deploying. 😏
+
+**Printing Stuff**
+- Enclose objects in `{}` to avoid `[object Object]` console logs
