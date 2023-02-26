@@ -8,6 +8,10 @@ function convertToBytes32(proposal: string[]): string[] {
     return proposal.map((p) => ethers.utils.formatBytes32String(p));
 }
 
+function convertToString(proposal: string[]): string[] {
+    return proposal.map((p) => ethers.utils.parseBytes32String(p));
+}
+
 describe("Ballot", () => {
     let ballotContract: Ballot;
 
@@ -122,4 +126,130 @@ describe("Ballot", () => {
         });
     });
 
+    describe("when the an attacker interact with the giveRightToVote function in the contract", function () {
+        it("should revert", async () => {
+            const signers = await ethers.getSigners();
+            const attacker = signers[1];
+            await expect(ballotContract
+                .connect(attacker)
+                .giveRightToVote(attacker.address))
+                .to.be.revertedWith("Only chairperson can give right to vote.");
+        });
+    });
+
+    describe("when the an attacker interact with the vote function in the contract", function () {
+        it("should revert", async () => {
+            const signers = await ethers.getSigners();
+            const attacker = signers[1];
+            await expect(ballotContract
+                .connect(attacker)
+                .vote(1))
+                .to.be.revertedWith("Has no right to vote");
+        });
+    });
+
+    describe("when the an attacker interact with the delegate function in the contract", function () {
+        it("should revert if trying to delegate to itself", async () => {
+            const signers = await ethers.getSigners();
+            const attacker = signers[1];
+            const rightToVoteTxn = await ballotContract.giveRightToVote(attacker.address);
+            await rightToVoteTxn.wait();
+            await expect(ballotContract
+                .connect(attacker)
+                .delegate(attacker.address))
+                .to.be.revertedWith("Self-delegation is disallowed.");
+        });
+
+        it("should revert if attacker has already voted", async () => {
+            const signers = await ethers.getSigners();
+            const attacker = signers[1];
+            const rightToVoteTxn = await ballotContract.giveRightToVote(attacker.address);
+            await rightToVoteTxn.wait();
+            const voteTxn = await ballotContract.connect(attacker).vote(1);
+            await voteTxn.wait();
+            const proxy = signers[2];
+            await expect(ballotContract
+                .connect(attacker)
+                .delegate(proxy.address))
+                .to.be.revertedWith("You already voted.");
+        });
+
+        it("should revert if attacker cannot vote", async () => {
+            const signers = await ethers.getSigners();
+            const attacker = signers[1];
+            const proxy = signers[2];
+            await expect(ballotContract
+                .connect(attacker)
+                .delegate(proxy.address))
+                .to.be.revertedWith("You have no right to vote");
+        });
+    });
+
+    describe("when someone interact with the winningProposal function before any votes are cast", function () {
+        it("should return 0", async () => {
+            const winningProposal = await ballotContract.winningProposal();
+            expect(winningProposal).to.equal(0);
+        });
+    });
+
+    describe("when someone interact with the winningProposal function after one vote is cast for the second proposal", function () {
+        it("should return 1", async () => {
+            const signers = await ethers.getSigners();
+            const voter = signers[1];
+            const rightToVoteTxn = await ballotContract.giveRightToVote(voter.address);
+            await rightToVoteTxn.wait();
+            const voteTxn = await ballotContract.connect(voter).vote(1);
+            await voteTxn.wait();
+            const winningProposal = await ballotContract.winningProposal();
+            expect(winningProposal).to.equal(1);
+        });
+    });
+
+    describe("when someone interact with the winnerName function before any votes are cast", function () {
+        it("should return name of proposal 0", async () => {
+            const winnerName = await ballotContract.winnerName();
+            const proposalName = ethers.utils.parseBytes32String(winnerName);
+            expect(proposalName).to.equal("proposal A");
+        });
+    });
+
+    describe("when someone interact with the winnerName function after one vote is cast for the second proposal", function () {
+        it("should return name of proposal 0", async () => {
+            const signers = await ethers.getSigners();
+            const voter = signers[1];
+            const rightToVoteTxn = await ballotContract.giveRightToVote(voter.address);
+            await rightToVoteTxn.wait();
+            const voteTxn = await ballotContract.connect(voter).vote(1);
+            await voteTxn.wait();
+            const winnerName = await ballotContract.winnerName();
+            const proposalName = ethers.utils.parseBytes32String(winnerName);
+            expect(proposalName).to.equal("proposal B");
+        });
+    });
+
+    describe("when someone interact with the winningProposal function and winnerName after 5 random votes are cast for the proposals", function () {
+        it("should return the name of the winner proposal", async () => {
+            const winningProposalId = await cast5andomVotes(ballotContract);
+            const winningProposal = await ballotContract.winningProposal();
+            expect(winningProposal).to.equal(winningProposalId);
+            const winnerName = await ballotContract.winnerName();
+            const proposalName = ethers.utils.parseBytes32String(winnerName);
+            expect(proposalName).to.equal(PROPOSALS[winningProposalId]);
+        });
+    });
 });
+
+async function cast5andomVotes(ballotContract: Ballot): Promise<number> {
+    const signers = await ethers.getSigners();
+    const votes = [0, 0, 0];
+    for (let i = 1; i <= 5; i++) {
+        const voter = signers[i];
+        const rightToVoteTxn = await ballotContract.giveRightToVote(voter.address);
+        await rightToVoteTxn.wait();
+        const proposalId = Math.floor(Math.random() * 3);
+        const voteTxn = await ballotContract.connect(voter).vote(proposalId);
+        await voteTxn.wait();
+        votes[proposalId]++;
+    }
+    return votes.indexOf(Math.max(...votes));
+}
