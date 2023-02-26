@@ -21,12 +21,15 @@ async function main() {
     const provider = ethers.getDefaultProvider("goerli");
 
     const privateKey = process.env.PRIVATE_KEY;
+    if (!privateKey || privateKey.length <= 0) {
+        throw new Error("No private key found");
+    }
     console.log("privateKey", privateKey);
 
-    const wallet = ethers.Wallet.createRandom();
+    const wallet = new ethers.Wallet(privateKey, provider);
     const signer = wallet.connect(provider);
-    // const balance = await signer.getBalance();
-    // console.log(`The account ${signer.address} has a balance of ${balance}`);
+    const balance = await signer.getBalance();
+    console.log(`The account ${signer.address} has a balance of ${balance} wei`);
 }
 
 main().catch((error) => {
