@@ -3,13 +3,13 @@ import { ethers } from "hardhat";
 const PROPOSALS = ["Proposal A", "Proposal B", "Proposal C"];
 
 async function main() {
-    const proposals = process.argv.slice(2);
+    let proposals = process.argv.slice(2);
     console.log("Deploying Ballot contract");
     console.log("Proposals: ");
     if (proposals.length <= 0) {
-        throw new Error("No proposals provided");
+        proposals = PROPOSALS;
     }
-    PROPOSALS.forEach((element, index) => {
+    proposals.forEach((element, index) => {
         console.log(`Proposal N. ${index + 1}: ${element}`);
     });
     // TODO
