@@ -45,22 +45,23 @@ describe("Ballot", () => {
             expect(chairperson.weight).to.equal(1);
         });
     });
-});
 
-describe("when the chairperson interacts with the giveRightToVote function in the contract", function () {
-    it("gives right to vote for another address", async function () {
-        // TODO
-        throw Error("Not implemented");
+    describe("when the chairperson interacts with the giveRightToVote function in the contract", function () {
+        it("gives right to vote for another address", async function () {
+            const signers = await ethers.getSigners();
+            const chairpersonSigner = signers[0];
+            const voter = signers[1];
+            const voterAddress = voter.getAddress();
+            await ballotContract.connect(chairpersonSigner).giveRightToVote(voterAddress);
+            const onChainVoter = await ballotContract.voters(voterAddress);
+            expect(onChainVoter.weight).to.equal(1);
+        });
+        it("can not give right to vote for someone that has voted", async function () {
+            // TODO
+        });
+        it("can not give right to vote for someone that has already voting rights", async function () {
+            // TODO
+        })
     });
-    it("can not give right to vote for someone that has voted", async function () {
-        // TODO
-        throw Error("Not implemented");
-    });
-    it("can not give right to vote for someone that has already voting rights", async function () {
-        // TODO
-        throw Error("Not implemented");
-    })
-});
 
-// parse and print the deployed proposals
-// debug and see the proposal values
+});
