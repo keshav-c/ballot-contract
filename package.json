@@ -1,5 +1,5 @@
 {
-  "name": "lesson-07-ballot-1",
+  "name": "ballot-testing",
   "packageManager": "yarn@3.4.1",
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
