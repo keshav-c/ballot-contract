@@ -45,3 +45,4 @@ npx hardhat run scripts/deploy.ts
 ## Deployments
  
 - Ballot contract deployed at 0x284fd3B532b8Ab045047C87b20daefA4ab1B1721 and block number 8558261
+- Once deployed we don't need to deploy the same contract again. Instead we use the `contractFactory.attach(address)` function to interact with the deployed contract.
